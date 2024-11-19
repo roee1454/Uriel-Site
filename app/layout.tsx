@@ -1,19 +1,14 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Assistant } from 'next/font/google'
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import Footer from "@/components/footer";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+const assistant = Assistant({
+  subsets: ['hebrew'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-assistant',
+})
 
 export const metadata: Metadata = {
   title: "אפליקציית Next.js",
@@ -28,11 +23,12 @@ export default function RootLayout({
   return (
     <html lang="he" dir="rtl">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${assistant.variable} ${assistant.className} antialiased`}
       >
+
         <Navbar />
-        {children}
-        <Footer />
+          {children}
+          <Footer />
       </body>
     </html>
   );

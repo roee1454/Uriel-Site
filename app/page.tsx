@@ -1,12 +1,13 @@
-'use client'
 import HelloWorld from "@/screens/home";
 import Options from "@/screens/options";
+import { getAllPackages } from "@/lib/supabase/packages";
 
-export default function Home() {
+export default async function Home() {
+  const packages = await getAllPackages();
   return (
     <>
       <HelloWorld />
-      <Options />
+      <Options packages={packages} />
     </>
   );
 }

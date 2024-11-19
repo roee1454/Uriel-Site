@@ -2,71 +2,30 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { usePackageStore } from '@/store/packageStore';
-import { useEffect } from 'react';
-
-export interface PackageDeal {
-  title: string;
-  description: string;
-  price: string;
-  image: string;
-}
-
-const packageDeals: PackageDeal[] = [
-  {
-    title: "חבילה בסיסית",
-    description: "מבחר פירות טריים לשבוע",
-    price: "₪99",
-    image: "/images/basic-package.jpg",
-  },
-  {
-    title: "חבילה משפחתית",
-    description: "מגוון פירות גדול לכל המשפחה",
-    price: "₪179",
-    image: "/images/family-package.jpg",
-  },
-  {
-    title: "חבילת פרימיום",
-    description: "פירות אקזוטיים ונדירים",
-    price: "₪249",
-    image: "/images/premium-package.jpg",
-  },
-];
+import { ForkKnifeCrossed } from 'lucide-react';
+import Link from 'next/link';
+import { PackageDeal } from '@/types';
 
 interface PackageCardProps extends PackageDeal {
   index: number;
 }
 
-const PackageCard: React.FC<PackageCardProps> = ({ title, description, price, image, index }) => {
-  const router = useRouter();
-  const setSelectedPackage = usePackageStore(state => state.setSelectedPackage);
-  const selectedPackage = usePackageStore(state => state.selectedPackage);
-
-  const handleOrderClick = () => {
-    setSelectedPackage({ title, description, price, image });
-  };
-
-  useEffect(() => {
-    if (selectedPackage) {
-      router.push('/payment');
-    }
-  }, [selectedPackage, router]);
-
+const PackageCard: React.FC<PackageCardProps> = ({ id, title, description, price, image, index }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
+      whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.2 }}
+      className="w-full"
     >
-      <Card className="w-full max-w-sm mx-auto">
-        <CardHeader>
-          <CardTitle className="text-right">{title}</CardTitle>
+      <Card className="w-full max-w-sm mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+        <CardHeader className="bg-black p-4">
+          <CardTitle className="text-right text-white text-xl font-bold">{title}</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="aspect-video relative mb-4">
+        <CardContent className="p-4">
+          <div className="aspect-square relative mb-4">
             <Image
               src={image}
               alt={title}
@@ -75,25 +34,43 @@ const PackageCard: React.FC<PackageCardProps> = ({ title, description, price, im
               className="rounded-md"
             />
           </div>
-          <p className="text-right">{description}</p>
-          <p className="text-right font-bold mt-2">{price}</p>
+          <p className="text-right text-gray-700">{description}</p>
+          <p className="text-right font-bold mt-2 text-gray-900">{price}</p>
         </CardContent>
-        <CardFooter className="flex justify-end">
-          <Button onClick={handleOrderClick}>הזמן עכשיו</Button>
+        <CardFooter className="flex justify-end p-4">
+          <Link href={`/payment/${id}`} className={buttonVariants({ variant: "default", className: "bg-black text-white hover:bg-opacity-80 transition-colors" })}>הזמן עכשיו</Link>
         </CardFooter>
       </Card>
     </motion.div>
   );
 };
 
-const Options: React.FC = () => {
+interface OptionsProps {
+  packages: PackageDeal[];
+}
+
+const Options: React.FC<OptionsProps> = ({ packages }) => {
   return (
-    <div className="container mx-auto py-12 bg-gradient-to-br from-purple-500 to-indigo-600 min-h-screen">
-      <h1 className="text-3xl font-bold text-center mb-8 text-white">חבילות פירות טריים</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {packageDeals.map((deal, index) => (
-          <PackageCard key={index} {...deal} index={index} />
-        ))}
+    <div className="w-full min-h-screen flex flex-col justify-center items-start bg-gradient-to-br from-black via-gray-800 to-black">
+      <div className="container mx-auto px-4 py-12">
+        <h1 className="text-7xl font-bold text-center mb-8 text-white">חבילות פירות טריים</h1>
+        <motion.h1 
+          initial={{ opacity: 0, scale: 0.5 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          transition={{ duration: .3 }}
+          className="text-5xl font-extrabold text-center mb-8 text-white flex justify-center items-center space-x-2"
+        >
+          <ForkKnifeCrossed className="font-bold text-white text-8xl" size={64} />
+        </motion.h1>
+        {packages.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {packages.map((deal, index) => (
+              <PackageCard key={index} {...deal} index={index} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-white text-xl mt-8">חבילות יגיעו בקרוב, הישארו מעודכנים!</p>
+        )}
       </div>
     </div>
   );
