@@ -1,6 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
+import { supabase } from '.'
 
 export default async function getPackageById(packageId: string) {
   if (!packageId) {

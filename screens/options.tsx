@@ -2,8 +2,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button, buttonVariants } from "@/components/ui/button";
-import Image from 'next/image';
+import { buttonVariants } from "@/components/ui/button";
+import Image from "next/legacy/image";
 import { ForkKnifeCrossed } from 'lucide-react';
 import Link from 'next/link';
 import { PackageDeal } from '@/types';
@@ -20,7 +20,7 @@ const PackageCard: React.FC<PackageCardProps> = ({ id, title, description, price
       transition={{ duration: 0.5, delay: index * 0.2 }}
       className="w-full"
     >
-      <Card className="w-full max-w-sm mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+      <Card className="w-full max-w-sm mx-auto bg-white shadow-lg rounded-md overflow-hidden">
         <CardHeader className="bg-black p-4">
           <CardTitle className="text-right text-white text-xl font-bold">{title}</CardTitle>
         </CardHeader>
@@ -29,13 +29,13 @@ const PackageCard: React.FC<PackageCardProps> = ({ id, title, description, price
             <Image
               src={image}
               alt={title}
-              fill
+              layout="fill"
               style={{ objectFit: 'cover' }}
               className="rounded-md"
             />
           </div>
           <p className="text-right text-gray-700">{description}</p>
-          <p className="text-right font-bold mt-2 text-gray-900">{price}</p>
+          <p className="text-right font-bold mt-2 text-gray-900">₪{price}</p>
         </CardContent>
         <CardFooter className="flex justify-end p-4">
           <Link href={`/payment/${id}`} className={buttonVariants({ variant: "default", className: "bg-black text-white hover:bg-opacity-80 transition-colors" })}>הזמן עכשיו</Link>
@@ -64,8 +64,8 @@ const Options: React.FC<OptionsProps> = ({ packages }) => {
         </motion.h1>
         {packages.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {packages.map((deal, index) => (
-              <PackageCard key={index} {...deal} index={index} />
+            {packages.toSorted((a, b) => parseInt(a.price) - parseInt(b.price)).map((packageDeal, index) => (
+              <PackageCard key={index} {...packageDeal} index={index} />
             ))}
           </div>
         ) : (

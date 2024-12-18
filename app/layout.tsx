@@ -11,7 +11,7 @@ const assistant = Assistant({
 })
 
 export const metadata: Metadata = {
-  title: "אפליקציית Next.js",
+  title: "Pretty - מכירת פירות",
   description: "נוצר על ידי create next app",
 };
 
@@ -21,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="he" dir="rtl">
+    <html lang="he" dir="rtl" suppressHydrationWarning>
       <body
         className={`${assistant.variable} ${assistant.className} antialiased`}
       >
@@ -29,6 +29,7 @@ export default function RootLayout({
         <Navbar />
           {children}
           <Footer />
+          <script async src="https://cdn.enable.co.il/licenses/enable-L23490xm54kyboqr-1223-66527/init.js"></script>
       </body>
     </html>
   );
